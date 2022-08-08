@@ -157,10 +157,8 @@ def create_tensorboard_callback(dir_name, experiment_name):
 # Plot the validation and training data separately
 import matplotlib.pyplot as plt
 
-def plot_curves(model_history):
-  """
-  Generates two plots side by side, one for loss and one for accuracy.
-  """
+
+def plot_loss_curves(model_history):
   fig, axes = plt.subplots(1, 2)
   df = pd.DataFrame(model_history.history)
   df = df.rename(columns={"loss": "Training_Loss", "accuracy": "Training_Accuracy", 
@@ -168,6 +166,8 @@ def plot_curves(model_history):
 
   df[['Training_Loss', 'Test_Loss']].plot(title="Loss", ax = axes[0], figsize=(15,6))
   df[['Training_Accuracy', 'Test_Accuracy']].plot(title="Accuracy", ax = axes[1], figsize = (15,6));
+
+
 
 def compare_historys(original_history, new_history, initial_epochs=5):
     """
