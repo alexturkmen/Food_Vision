@@ -30,6 +30,7 @@ def load_and_prep_image(filename, img_shape=224, scale=True):
 # Note: The following confusion matrix code is a remix of Scikit-Learn's 
 # plot_confusion_matrix function - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.plot_confusion_matrix.html
 import itertools
+import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import confusion_matrix
@@ -152,38 +153,21 @@ def create_tensorboard_callback(dir_name, experiment_name):
   print(f"Saving TensorBoard log files to: {log_dir}")
   return tensorboard_callback
 
+
 # Plot the validation and training data separately
 import matplotlib.pyplot as plt
 
-def plot_loss_curves(history):
+def plot_curves(model_history):
   """
-  Returns separate loss curves for training and validation metrics.
+  Generates two plots side by side, one for loss and one for accuracy.
+  """
+  fig, axes = plt.subplots(1, 2)
+  df = pd.DataFrame(model_history.history)
+  df = df.rename(columns={"loss": "Training_Loss", "accuracy": "Training_Accuracy", 
+                          "val_loss":"Test_Loss", "val_accuracy": "Test_Accuracy"})
 
-  Args:
-    history: TensorFlow model History object (see: https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/History)
-  """ 
-  loss = history.history['loss']
-  val_loss = history.history['val_loss']
-
-  accuracy = history.history['accuracy']
-  val_accuracy = history.history['val_accuracy']
-
-  epochs = range(len(history.history['loss']))
-
-  # Plot loss
-  plt.plot(epochs, loss, label='training_loss')
-  plt.plot(epochs, val_loss, label='val_loss')
-  plt.title('Loss')
-  plt.xlabel('Epochs')
-  plt.legend()
-
-  # Plot accuracy
-  plt.figure()
-  plt.plot(epochs, accuracy, label='training_accuracy')
-  plt.plot(epochs, val_accuracy, label='val_accuracy')
-  plt.title('Accuracy')
-  plt.xlabel('Epochs')
-  plt.legend();
+  df[['Training_Loss', 'Test_Loss']].plot(title="Loss", ax = axes[0], figsize=(15,6))
+  df[['Training_Accuracy', 'Test_Accuracy']].plot(title="Accuracy", ax = axes[1], figsize = (15,6));
 
 def compare_historys(original_history, new_history, initial_epochs=5):
     """
