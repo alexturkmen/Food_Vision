@@ -8,7 +8,6 @@ def load_and_prep_image(filename, img_shape=224, scale=True):
   """
   Reads in an image from filename, turns it into a tensor and reshapes into
   (224, 224, 3).
-
   Parameters
   ----------
   filename (str): string filename of target image
@@ -30,7 +29,6 @@ def load_and_prep_image(filename, img_shape=224, scale=True):
 # Note: The following confusion matrix code is a remix of Scikit-Learn's 
 # plot_confusion_matrix function - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.plot_confusion_matrix.html
 import itertools
-import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import confusion_matrix
@@ -38,10 +36,8 @@ from sklearn.metrics import confusion_matrix
 # Our function needs a different name to sklearn's plot_confusion_matrix
 def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_size=15, norm=False, savefig=False): 
   """Makes a labelled confusion matrix comparing predictions and ground truth labels.
-
   If classes is passed, confusion matrix will be labelled, if not, integer class values
   will be used.
-
   Args:
     y_true: Array of truth labels (must be same shape as y_pred).
     y_pred: Array of predicted labels (must be same shape as y_true).
@@ -53,7 +49,6 @@ def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_s
   
   Returns:
     A labelled confusion matrix plot comparing y_true and y_pred.
-
   Example usage:
     make_confusion_matrix(y_true=test_labels, # ground truth test labels
                           y_pred=y_preds, # predicted labels
@@ -138,10 +133,8 @@ import datetime
 def create_tensorboard_callback(dir_name, experiment_name):
   """
   Creates a TensorBoard callback instand to store log files.
-
   Stores log files with the filepath:
     "dir_name/experiment_name/current_datetime/"
-
   Args:
     dir_name: target directory to store TensorBoard log files
     experiment_name: name of experiment directory (e.g. efficientnet_model_1)
@@ -153,21 +146,37 @@ def create_tensorboard_callback(dir_name, experiment_name):
   print(f"Saving TensorBoard log files to: {log_dir}")
   return tensorboard_callback
 
-
 # Plot the validation and training data separately
 import matplotlib.pyplot as plt
 
+def plot_curves(history):
+  """
+  Returns separate loss curves for training and validation metrics.
+  Args:
+    history: TensorFlow model History object (see: https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/History)
+  """ 
+  loss = history.history['loss']
+  val_loss = history.history['val_loss']
 
-def plot_loss_curves(model_history):
-  fig, axes = plt.subplots(1, 2)
-  df = pd.DataFrame(model_history.history)
-  df = df.rename(columns={"loss": "Training_Loss", "accuracy": "Training_Accuracy", 
-                          "val_loss":"Test_Loss", "val_accuracy": "Test_Accuracy"})
+  accuracy = history.history['accuracy']
+  val_accuracy = history.history['val_accuracy']
 
-  df[['Training_Loss', 'Test_Loss']].plot(title="Loss", ax = axes[0], figsize=(15,6))
-  df[['Training_Accuracy', 'Test_Accuracy']].plot(title="Accuracy", ax = axes[1], figsize = (15,6));
+  epochs = range(len(history.history['loss']))
 
+  # Plot loss
+  plt.plot(epochs, loss, label='training_loss')
+  plt.plot(epochs, val_loss, label='val_loss')
+  plt.title('Loss')
+  plt.xlabel('Epochs')
+  plt.legend()
 
+  # Plot accuracy
+  plt.figure()
+  plt.plot(epochs, accuracy, label='training_accuracy')
+  plt.plot(epochs, val_accuracy, label='val_accuracy')
+  plt.title('Accuracy')
+  plt.xlabel('Epochs')
+  plt.legend();
 
 def compare_historys(original_history, new_history, initial_epochs=5):
     """
@@ -220,7 +229,6 @@ import zipfile
 def unzip_data(filename):
   """
   Unzips filename into the current working directory.
-
   Args:
     filename (str): a filepath to a target zip folder to be unzipped.
   """
@@ -235,7 +243,6 @@ import os
 def walk_through_dir(dir_path):
   """
   Walks through dir_path returning its contents.
-
   Args:
     dir_path (str): target directory
   
@@ -254,11 +261,9 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 def calculate_results(y_true, y_pred):
   """
   Calculates model accuracy, precision, recall and f1 score of a binary classification model.
-
   Args:
       y_true: true labels in the form of a 1D array
       y_pred: predicted labels in the form of a 1D array
-
   Returns a dictionary of accuracy, precision, recall, f1-score.
   """
   # Calculate model accuracy
