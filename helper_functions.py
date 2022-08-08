@@ -275,3 +275,18 @@ def calculate_results(y_true, y_pred):
                   "recall": model_recall,
                   "f1": model_f1}
   return model_results
+
+import pandas as pd
+
+def plot_loss_curves(model_history):
+  # Create 2 figures side by side
+  fig, axes = plt.subplots(1, 2)
+  # Create a df using history object
+  df = pd.DataFrame(model_history.history)
+  df = df.rename(columns={"loss": "Training_Loss", "accuracy": "Training_Accuracy", "val_loss": "Test Loss", "val_accuracy": "Test_Accuracy"})
+  # Plot the data side by side
+  df[['Training_Loss', 'Test_Loss']].plot(title="Loss", ax = axes[0], figsize=(15,6))
+  df[['Training_Accuracy', 'Test_Accuracy']].plot(title="Accuracy", ax = axes[1], figsize = (15,6));
+
+
+
