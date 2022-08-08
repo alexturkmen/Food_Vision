@@ -283,7 +283,7 @@ def plot_loss_curves(model_history):
   fig, axes = plt.subplots(1, 2)
   # Create a df using history object
   df = pd.DataFrame(model_history.history)
-  df = df.rename(columns={"loss": "Training_Loss", "accuracy": "Training_Accuracy", "val_loss": "Test Loss", "val_accuracy": "Test_Accuracy"})
+  df = df.rename(columns={"loss": "Training_Loss", "accuracy": "Training_Accuracy", "val_loss": "Test_Loss", "val_accuracy": "Test_Accuracy"})
   # Plot the data side by side
   df[['Training_Loss', 'Test_Loss']].plot(title="Loss", ax = axes[0], figsize=(15,6))
   df[['Training_Accuracy', 'Test_Accuracy']].plot(title="Accuracy", ax = axes[1], figsize = (15,6));
